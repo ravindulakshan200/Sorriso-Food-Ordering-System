@@ -35,7 +35,7 @@ export default function ContactPage() {
         setFormData({ name: "", email: "", message: "" });
         toast("Message sent successfully. We will be in touch shortly.", "success");
       }
-    } catch (err) {
+    } catch {
       toast("An unexpected error occurred.", "error");
     } finally {
       setIsSubmitting(false);

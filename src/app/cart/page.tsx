@@ -13,7 +13,12 @@ import { useToast } from "@/components/providers/ToastProvider";
 
 declare global {
   interface Window {
-    payhere: any;
+    payhere: {
+      startPayment: (payment: unknown) => void;
+      onCompleted?: (orderId: string) => void;
+      onDismissed?: () => void;
+      onError?: (error: string) => void;
+    };
   }
 }
 
@@ -94,7 +99,7 @@ export default function CheckoutPage() {
       const isSandbox = process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true';
       const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || '1222956';
       
-      const payment: any = {
+      const payment: Record<string, string | number | boolean> = {
         sandbox: isSandbox,
         merchant_id: merchantId,
         return_url: window.location.origin + '/checkout/success?order=' + orderId,
@@ -119,7 +124,7 @@ export default function CheckoutPage() {
       console.log("=============================");
 
       // 3. Define Callback Interceptors
-      window.payhere.onCompleted = async function onCompleted(completedOrderId: string) {
+      window.payhere.onCompleted = async function onCompleted() {
         await supabase.from('orders').update({ payment_status: 'paid' }).eq('id', orderId);
         toast("Order placed successfully!", "success");
         clearCart();
@@ -132,7 +137,7 @@ export default function CheckoutPage() {
         setIsLoading(false);
       };
 
-      window.payhere.onError = function onError(error: any) {
+      window.payhere.onError = function onError(error: string) {
         toast("Payment Error: " + error, "error");
         setIsLoading(false);
       };
@@ -140,7 +145,7 @@ export default function CheckoutPage() {
       // 4. Trigger Widget
       window.payhere.startPayment(payment);
 
-    } catch (err) {
+    } catch {
       toast("An unexpected error occurred.", "error");
       setIsLoading(false);
     }

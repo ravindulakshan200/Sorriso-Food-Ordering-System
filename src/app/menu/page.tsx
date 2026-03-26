@@ -34,7 +34,7 @@ export default function MenuPage() {
         } else if (data) {
           setMenuItems(data as MenuItem[]);
         }
-      } catch (err) {
+      } catch {
         toast("Network error occurred", "error");
       } finally {
         setIsLoading(false);
@@ -56,7 +56,7 @@ export default function MenuPage() {
                             item.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, menuItems]);
 
   return (
     <div className="min-h-screen bg-background relative z-10 pb-32">

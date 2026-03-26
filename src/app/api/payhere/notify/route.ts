@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     // Always formally return 200 OK so PayHere doesn't keep retrying Webhook
     return new NextResponse('OK', { status: 200 });
 
-  } catch (error: any) {
+  } catch {
     return new NextResponse('Internal Error', { status: 500 });
   }
 }

@@ -74,7 +74,7 @@ export default function ReservationsPage() {
         });
         setStep(1);
       }
-    } catch (err) {
+    } catch {
       toast("An unexpected error occurred.", "error");
     } finally {
       setIsLoading(false);
