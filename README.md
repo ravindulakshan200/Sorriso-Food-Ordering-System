@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sorriso Food
 
-## Getting Started
+A premium, luxury Next.js 14 restaurant and e-commerce application.
 
-First, run the development server:
+## 🚀 Tech Stack
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS, Framer Motion
+- **Database**: Supabase (PostgreSQL)
+- **Payments**: PayHere Sri Lanka
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Setup Instructions
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. Database (Supabase) Setup
+1. Create a project on [Supabase.com](https://supabase.com/).
+2. Navigate to the **SQL Editor** in your Supabase Dashboard.
+3. Open `supabase/migrations/20240101_init_schema.sql` and run the entire script. This will generate your tables and insert 16 luxury menu items.
+4. Go to Project Settings -> API and copy your URL and `anon` public key.
+5. Create a `.env.local` file from the example:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+6. Paste your credentials.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. PayHere Setup
+1. Obtain an account at PayHere Sandbox or Production.
+2. In your PayHere portal, navigate to Integration -> App credentials.
+3. Copy your `PAYHERE_MERCHANT_ID` and `PAYHERE_SECRET` into your `.env.local` file.
+4. Set `NEXT_PUBLIC_PAYHERE_ENV` to `sandbox` for testing.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Local Development
+1. Run `npm install`
+2. Run `npm run dev`
+3. Access at `http://localhost:3000`
 
-## Learn More
+### 4. Vercel Deployment
+1. Push your repository to GitHub.
+2. Import the project in [Vercel](https://vercel.com/).
+3. Add the environment variables from your `.env.local` to Vercel's Environment Variables settings.
+4. Deploy!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Features included
+- **Cinematic Landing Page**: Complete front-page with stagger animations and horizontal scroll.
+- **Glassmorphic Menu Filter**: Instantly filtering categories from the seed datastore.
+- **Interactive Checkouts & Cart**: Real-time state management using React Context. Floating label UI.
+- **Secure Integrations**: Ready infrastructure for Supabase inserts and PayHere hashes.
