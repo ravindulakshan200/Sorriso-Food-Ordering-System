@@ -28,8 +28,36 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Sorriso Food — Taste of the Heaven",
-  description: "Experience extraordinary flavors at Sorriso Food, Battaramulla. Order online, reserve a table, and taste heaven.",
+  title: "Sorriso — Your Belly Knows Best",
+  description: "Order online from Sorriso, Battaramulla's favourite spot for Sri Lankan & International fusion rice and bites. Fast delivery via Uber Eats & PickMe Food.",
+  keywords: ["sorriso", "battaramulla", "food", "fried rice", "basmathi", "bites", "chilli chicken", "online order", "sri lanka", "delivery"],
+  authors: [{ name: "Sorriso" }],
+  openGraph: {
+    title: "Sorriso — Your Belly Knows Best",
+    description: "Sri Lankan & International fusion rice dishes and bites. Order online from Battaramulla.",
+    url: "https://sorrisofood.lk",
+    siteName: "Sorriso",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Sorriso — Your Belly Knows Best",
+      },
+    ],
+    locale: "en_LK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sorriso — Your Belly Knows Best",
+    description: "Order online from Sorriso, Battaramulla. Sri Lankan & International fusion.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

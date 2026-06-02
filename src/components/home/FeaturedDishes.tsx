@@ -1,133 +1,145 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/components/providers/CartProvider";
 import { formatPrice } from "@/lib/utils";
-import { MenuItem } from "@/types";
 import { useToast } from "@/components/providers/ToastProvider";
-
-const FEATURED: MenuItem[] = [
-  {
-    id: "dish-1",
-    name: "Truffle Lobster Risotto",
-    description: "Creamy arborio rice, fresh Maine lobster, shaved black truffle, aged parmesan.",
-    price: 6500,
-    category: "Mains",
-    image_url: "https://images.unsplash.com/photo-1626203004838-8e658e38ee05?q=80&w=800&auto=format&fit=crop",
-    is_available: true,
-    is_featured: true,
-  },
-  {
-    id: "dish-2",
-    name: "Wagyu Beef Wellington",
-    description: "Premium A5 Wagyu wrapped in mushroom duxelles and crisp puff pastry.",
-    price: 12500,
-    category: "Mains",
-    image_url: "https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800&auto=format&fit=crop",
-    is_available: true,
-    is_featured: true,
-  },
-  {
-    id: "dish-3",
-    name: "Saffron Spiced Seabass",
-    description: "Pan-seared Chilean seabass with saffron beurre blanc and asparagus.",
-    price: 4800,
-    category: "Mains",
-    image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=800&auto=format&fit=crop",
-    is_available: true,
-    is_featured: true,
-  },
-  {
-    id: "dish-4",
-    name: "Gold Leaf Chocolate Tart",
-    description: "Valrhona dark chocolate ganache, hazelnut praline, 24k edible gold.",
-    price: 2500,
-    category: "Desserts",
-    image_url: "https://images.unsplash.com/photo-1550617931-e17a7b70dce2?q=80&w=800&auto=format&fit=crop",
-    is_available: true,
-    is_featured: true,
-  },
-];
+import { FEATURED_ITEMS } from "@/lib/seed-data";
 
 export default function FeaturedDishes() {
-  const { addToCart } = useCart();
+  const { addToCart, items } = useCart();
   const { toast } = useToast();
 
-  const handleAdd = (item: MenuItem) => {
-    addToCart(item);
-    toast(`${item.name} added to cart`, "success");
-  };
-
   return (
-    <section className="py-32 bg-background relative z-10">
-      <div className="container mx-auto px-6 lg:px-12 mb-16 flex justify-between items-end border-b border-white/10 pb-8">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <span className="font-accent text-accent tracking-[0.3em] text-xs uppercase mb-4 block">Seasonal Menu</span>
-          <h2 className="font-heading text-5xl md:text-6xl text-white font-light">Featured Creations</h2>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="hidden md:block"
-        >
-          <a href="/menu" className="font-accent text-sm tracking-[0.2em] font-medium text-text-muted hover:text-accent uppercase transition-colors flex flex-col items-center group">
-            <span className="mb-2">View Full Menu</span>
-            <div className="w-8 h-[1px] bg-accent group-hover:w-full transition-all duration-300" />
-          </a>
-        </motion.div>
-      </div>
+    <section className="py-24 bg-background relative z-10">
+      <div className="container mx-auto px-6 lg:px-12">
 
-      {/* Horizontal Scroll Area */}
-      <div className="w-full relative px-6 md:px-12 container mx-auto">
-        <div className="flex overflow-x-auto gap-8 pb-12 pt-4 snap-x snap-mandatory scrollbar-hide no-scrollbar scroll-smooth">
-          {FEATURED.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              className="snap-start snap-always shrink-0 w-[300px] md:w-[380px] bg-card rounded-2xl overflow-hidden glass hover:glass-hover group flex flex-col h-[520px]"
+        {/* Section header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <span className="font-accent text-accent tracking-[0.35em] text-xs uppercase mb-3 block">
+              Crowd Favourites
+            </span>
+            <h2 className="font-heading text-4xl md:text-5xl text-white font-light leading-tight">
+              Must-Try <span className="text-accent">Dishes</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <Link
+              href="/menu"
+              className="group inline-flex items-center gap-2 font-accent text-xs tracking-[0.2em] uppercase text-text-muted hover:text-accent transition-colors"
             >
-              <div className="relative h-[250px] w-full overflow-hidden shrink-0">
-                <Image 
-                  src={item.image_url} 
-                  alt={item.name} 
-                  fill 
-                  className="object-cover group-hover:scale-110 transition-transform duration-700" 
-                />
-                <div className="absolute top-4 right-4 bg-background/80 backdrop-blur-md border border-white/10 font-heading text-xl text-accent px-4 py-1 rounded-full">
-                  {formatPrice(item.price)}
-                </div>
-              </div>
-              <div className="p-8 flex flex-col flex-grow relative">
-                <h3 className="font-heading text-2xl font-medium text-white mb-3 tracking-wide">{item.name}</h3>
-                <p className="font-body text-text-muted font-light leading-relaxed mb-8 flex-grow">
-                  {item.description}
-                </p>
-                <button 
-                  onClick={() => handleAdd(item)}
-                  className="mt-auto flex items-center justify-between w-full border border-white/10 group-hover:border-accent text-text-muted group-hover:text-accent bg-background/50 py-4 px-6 rounded-xl transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.5)]"
-                >
-                  <span className="font-accent text-xs tracking-[0.2em] uppercase">Add to Order</span>
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-          {/* Spacing element at end so last card isn't flush */}
-          <div className="snap-start shrink-0 w-1 md:w-8" />
+              Full Menu
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
+
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {FEATURED_ITEMS.map((item, i) => {
+            const cartItemId = `${item.id}-Medium`;
+            const inCart = items.find(x => x.cartItemId === cartItemId);
+
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: i * 0.1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                className="group relative bg-card rounded-2xl overflow-hidden border border-white/5 hover:border-accent/30 flex flex-col transition-all duration-300 hover:shadow-[0_8px_40px_rgba(201,168,76,0.12)]"
+              >
+                {/* Category chip */}
+                <div className="absolute top-3 left-3 z-20">
+                  <span className="font-accent text-[8px] tracking-widest uppercase bg-background/80 backdrop-blur-md border border-white/10 text-text-muted px-2.5 py-1 rounded-full">
+                    {item.category === "Rice (Basmathi)" ? "🍚 Rice" : "🌶️ Bite"}
+                  </span>
+                </div>
+
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden shrink-0">
+                  <Image
+                    src={item.image_url}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent" />
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col flex-grow p-5">
+                  <h3 className="font-heading text-lg text-white font-medium leading-tight mb-1 line-clamp-2">
+                    {item.name}
+                  </h3>
+                  <p className="font-body text-text-muted text-xs leading-relaxed mb-4 flex-grow line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  {/* Price + Add */}
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <span className="font-accent text-[9px] tracking-widest text-text-muted uppercase block">
+                        from
+                      </span>
+                      <span className="font-heading text-lg text-accent">
+                        {formatPrice(item.price_medium ?? item.price)}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        addToCart(item, "Medium");
+                        toast(`${item.name} (Medium) added!`, "success");
+                      }}
+                      className={`flex items-center gap-2 rounded-xl border py-2 px-3 font-accent text-[10px] tracking-widest uppercase transition-all ${
+                        inCart
+                          ? "border-accent/30 bg-accent/10 text-accent"
+                          : "border-white/10 text-text-muted hover:border-accent hover:text-accent"
+                      }`}
+                    >
+                      {inCart ? <ShoppingBag className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                      {inCart ? "In Cart" : "Add"}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* View all CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mt-12 flex justify-center"
+        >
+          <Link
+            href="/menu"
+            className="group flex items-center gap-3 border border-white/10 hover:border-accent text-text-muted hover:text-accent px-8 py-3.5 font-accent text-xs tracking-[0.2em] uppercase transition-all duration-300"
+          >
+            See All {16} Dishes
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
+
       </div>
     </section>
   );

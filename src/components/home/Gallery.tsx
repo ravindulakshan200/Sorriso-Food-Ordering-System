@@ -2,59 +2,88 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-const Instagram = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-);
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+const GALLERY_IMAGES = [
+  {
+    src: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?q=80&w=800&auto=format&fit=crop",
+    label: "Fried Rice",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800&auto=format&fit=crop",
+    label: "Chili Pork",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=800&auto=format&fit=crop",
+    label: "Crispy Chicken Rice",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?q=80&w=800&auto=format&fit=crop",
+    label: "Chilli Chicken",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1562802378-063ec186a863?q=80&w=800&auto=format&fit=crop",
+    label: "Sea Food Rice",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=800&auto=format&fit=crop",
+    label: "Mix Meat Rice",
+  },
+];
 
 export default function Gallery() {
-  const photos = [
-    "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop", // Steak
-    "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800&auto=format&fit=crop", // Wine toast
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop", // Restaurant interior dark
-    "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=800&auto=format&fit=crop", // Chef plating
-    "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=800&auto=format&fit=crop", // Pasta dish
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800&auto=format&fit=crop", // Fusion platter
-  ];
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: (i: number) => ({
-      opacity: 1, 
-      scale: 1,
-      transition: { delay: i * 0.1, duration: 0.6 }
-    })
-  };
-
   return (
-    <section className="py-24 bg-background border-t border-white/5 relative">
-      <div className="container mx-auto px-6 lg:px-12 mb-12 flex flex-col items-center">
-        <span className="font-accent text-accent tracking-[0.3em] text-xs uppercase mb-4 block">Follow Our Journey</span>
-        <h2 className="font-heading text-4xl md:text-5xl text-white font-light tracking-wide flex items-center gap-4">
-          <Instagram className="w-8 h-8 text-white/50" />
-          @SorrisoFood
-        </h2>
-      </div>
+    <section className="py-24 bg-background relative z-10">
+      <div className="container mx-auto px-6 lg:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+        >
+          <div>
+            <span className="font-accent text-accent tracking-[0.35em] text-xs uppercase mb-3 block">
+              Food Gallery
+            </span>
+            <h2 className="font-heading text-4xl md:text-5xl text-white font-light">
+              Fresh From<br />
+              <span className="text-accent">Our Kitchen</span>
+            </h2>
+          </div>
+          <Link
+            href="/menu"
+            className="group inline-flex items-center gap-2 font-accent text-xs tracking-[0.2em] uppercase text-text-muted hover:text-accent transition-colors"
+          >
+            Order Now <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
 
-      <div className="w-full">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-[400px] lg:h-[350px]">
-          {photos.map((url, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {GALLERY_IMAGES.map((img, i) => (
             <motion.div
-              key={i}
-              className="relative w-full h-full overflow-hidden group border border-white/5"
-              custom={i}
-              initial="hidden"
-              whileInView="visible"
+              key={img.label}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               viewport={{ once: true, margin: "-50px" }}
-              variants={itemVariants}
+              className={`relative overflow-hidden rounded-2xl group cursor-pointer ${
+                i === 0 || i === 5 ? "md:col-span-1 row-span-1" : ""
+              }`}
+              style={{ aspectRatio: i === 2 ? "16/9" : "4/3" }}
             >
-              <Image 
-                src={url} 
-                alt={`Instagram gallery photo ${i+1}`}
+              <Image
+                src={img.src}
+                alt={img.label}
                 fill
-                className="object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700"
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-background/0 group-hover:bg-background/40 transition-colors duration-300 flex items-center justify-center">
-                <Instagram className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-4 group-hover:translate-y-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                <span className="font-accent text-[10px] tracking-widest uppercase text-white">
+                  {img.label}
+                </span>
               </div>
             </motion.div>
           ))}

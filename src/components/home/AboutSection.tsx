@@ -3,60 +3,83 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { MapPin, Phone, Clock } from "lucide-react";
+
+const INFO = [
+  { icon: MapPin, text: "7th Lane, Wickramasinghepura Rd, Battaramulla" },
+  { icon: Phone, text: "0777 222 069 / 0767 074 385" },
+  { icon: Clock, text: "Mon–Sat: 10 AM – 10 PM · Sun: 11 AM – 9 PM" },
+];
 
 export default function AboutSection() {
   return (
-    <section className="py-24 bg-secondary relative z-10 border-y border-white/5 overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-        
-        {/* Left Image Split */}
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
+    <section className="py-24 bg-secondary border-y border-white/5 relative z-10 overflow-hidden">
+      <div className="container mx-auto px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+
+        {/* Image */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="w-full lg:w-1/2 relative flex justify-center lg:justify-start"
+          viewport={{ once: true, margin: "-80px" }}
+          className="w-full lg:w-5/12 relative"
         >
-          {/* Gold Frame Accent behind image */}
-          <div className="absolute top-8 left-8 bottom-[-2rem] right-[-2rem] border border-accent mix-blend-screen opacity-50 z-0"></div>
-          
-          <div className="relative w-full max-w-md aspect-[4/5] overflow-hidden z-10 shadow-2xl">
-            <Image 
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop" 
-              alt="Restaurant Interior"
+          <div className="absolute inset-0 translate-x-4 translate-y-4 border border-accent/30 rounded-2xl pointer-events-none z-0" />
+          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl z-10">
+            <Image
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop"
+              alt="Sorriso Kitchen"
               fill
               className="object-cover"
             />
+            {/* Floating badge */}
+            <div className="absolute bottom-6 left-6 bg-background/90 backdrop-blur-md border border-white/10 rounded-xl px-5 py-4 shadow-xl">
+              <p className="font-heading text-2xl text-accent font-light">2024</p>
+              <p className="font-accent text-[10px] tracking-widest uppercase text-text-muted mt-0.5">Est. Battaramulla</p>
+            </div>
           </div>
         </motion.div>
-        
-        {/* Right Text Split */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="w-full lg:w-1/2 relative pl-6 lg:pl-12"
-        >
-          {/* Vertical Gold Line Divider */}
-          <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-accent to-transparent opacity-50 hidden lg:block" />
 
-          <span className="font-accent text-accent tracking-[0.3em] text-xs uppercase mb-6 block">Our Story</span>
-          <h2 className="font-heading text-5xl lg:text-7xl font-light text-white mb-8 leading-tight">
+        {/* Text */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.15 }}
+          viewport={{ once: true, margin: "-80px" }}
+          className="w-full lg:w-7/12"
+        >
+          <span className="font-accent text-accent tracking-[0.35em] text-xs uppercase mb-4 block">
             Our Story
+          </span>
+          <h2 className="font-heading text-4xl md:text-5xl text-white font-light leading-tight mb-8">
+            Born from Passion,<br />
+            <span className="text-accent">Served with Love</span>
           </h2>
-          
-          <div className="space-y-6 font-body text-text-muted text-lg font-light leading-relaxed mb-12">
+
+          <div className="space-y-5 font-body text-text-muted leading-relaxed mb-10">
             <p>
-              Born in 2024 with a simple belief — that great food brings people together. Sorriso Food was founded in Battaramulla with a passion for crafting unforgettable Sri Lankan and International fusion dishes. Every plate we serve carries the love and dedication of our kitchen team. Your belly knows best — and we make sure it knows happiness.
+              Sorriso started with a simple idea — that incredible food doesn&apos;t need to be complicated. Founded in Battaramulla in 2024, we set out to bring Sri Lankan and international fusion flavours together under one roof.
+            </p>
+            <p>
+              Every grain of rice is wok-tossed to order. Every bite is seasoned with the love of our kitchen team. Whether you&apos;re here for our famous Crispy Chicken Fried Rice or the fiery Hot Butter Cuttle Fish — your belly will know it made the right choice.
             </p>
           </div>
-          
-          <Link href="/about" className="group inline-flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
-              <span className="w-2 h-2 rounded-full bg-accent group-hover:scale-150 transition-transform"/>
-            </div>
-            <span className="font-accent tracking-[0.2em] uppercase text-sm font-medium text-white group-hover:text-accent transition-colors">Discover More</span>
+
+          {/* Contact info */}
+          <div className="space-y-3 mb-10">
+            {INFO.map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-start gap-3 text-text-muted font-body text-sm">
+                <Icon className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+
+          <Link
+            href="/menu"
+            className="inline-flex items-center gap-3 bg-accent hover:bg-accent-hover text-background px-7 py-3.5 font-accent text-xs tracking-[0.2em] uppercase font-bold transition-all hover:shadow-[0_0_20px_rgba(201,168,76,0.35)]"
+          >
+            Browse Our Menu
           </Link>
         </motion.div>
 

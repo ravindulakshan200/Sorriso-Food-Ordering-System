@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Menu", href: "/menu" },
-  { name: "Reservations", href: "/reservations" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -124,11 +123,11 @@ export default function Navbar() {
             </nav>
             <div className="mt-auto pb-10 flex flex-col items-center justify-center gap-6">
               <Link 
-                href="/reservations" 
+                href="/menu" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full max-w-xs block text-center border border-accent text-accent font-accent text-sm tracking-[0.2em] uppercase py-4 hover:bg-accent hover:text-background transition-colors"
+                className="w-full max-w-xs block text-center bg-accent text-background font-accent text-sm tracking-[0.2em] uppercase py-4 font-bold hover:bg-accent-hover transition-colors"
               >
-                Reserve a Table
+                Order Now
               </Link>
             </div>
           </motion.div>

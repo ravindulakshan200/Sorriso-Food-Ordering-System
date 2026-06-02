@@ -1,69 +1,34 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { ShoppingBag, Star, Truck, UtensilsCrossed } from "lucide-react";
 
-function Counter({ to, duration = 2 }: { to: number; duration?: number }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  useEffect(() => {
-    if (isInView) {
-      let startTime: number;
-      let animationFrame: number;
-
-      const step = (timestamp: number) => {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-        
-        // Easing out quint
-        const easeProgress = 1 - Math.pow(1 - progress, 5);
-        setCount(Math.floor(easeProgress * to));
-
-        if (progress < 1) {
-          animationFrame = requestAnimationFrame(step);
-        }
-      };
-
-      animationFrame = requestAnimationFrame(step);
-      return () => cancelAnimationFrame(animationFrame);
-    }
-  }, [isInView, to, duration]);
-
-  return <span ref={ref}>{count}</span>;
-}
+const STATS = [
+  { icon: UtensilsCrossed, value: "16+", label: "Menu Items", color: "text-amber-400" },
+  { icon: Star, value: "4.8★", label: "Customer Rating", color: "text-yellow-400" },
+  { icon: ShoppingBag, value: "500+", label: "Orders Served", color: "text-green-400" },
+  { icon: Truck, value: "Fast", label: "Delivery Available", color: "text-blue-400" },
+];
 
 export default function Stats() {
-  const stats = [
-    { value: 12, label: "Years Experience", suffix: "+" },
-    { value: 200, label: "Signature Dishes", suffix: "+" },
-    { value: 50, label: "Happy Guests", suffix: "k+" }
-  ];
-
   return (
-    <section className="py-24 bg-background border-b border-white/5 relative z-10 overflow-hidden">
-      {/* Decorative background grid */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
-
-      <div className="container mx-auto px-6 lg:px-12 items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 divide-y md:divide-y-0 md:divide-x divide-white/10 relative z-10">
-          {stats.map((stat, i) => (
-            <motion.div 
-              key={i}
+    <section className="py-20 bg-background relative z-10">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {STATS.map(({ icon: Icon, value, label, color }, i) => (
+            <motion.div
+              key={label}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.2 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center justify-center pt-12 md:pt-0 text-center"
+              transition={{ duration: 0.55, delay: i * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              className="glass border border-white/5 rounded-2xl p-6 flex flex-col items-center text-center hover:border-accent/20 transition-colors"
             >
-              <div className="font-heading text-6xl lg:text-8xl text-accent mb-4 leading-none tracking-tighter">
-                <Counter to={stat.value} />
-                <span className="text-4xl lg:text-6xl text-accent align-top ml-1">{stat.suffix}</span>
+              <div className={`w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-4 ${color}`}>
+                <Icon className="w-5 h-5" />
               </div>
-              <span className="font-accent tracking-[0.3em] text-xs uppercase text-text-muted font-medium">
-                {stat.label}
-              </span>
+              <p className={`font-heading text-4xl font-light mb-1 ${color}`}>{value}</p>
+              <p className="font-accent text-[10px] tracking-widest uppercase text-text-muted">{label}</p>
             </motion.div>
           ))}
         </div>

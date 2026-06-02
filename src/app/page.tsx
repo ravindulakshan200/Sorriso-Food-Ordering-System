@@ -11,11 +11,11 @@ export default function Home() {
     <main>
       <Hero />
       <Marquee />
+      <Stats />
       <FeaturedDishes />
       <AboutSection />
-      <Stats />
-      <Testimonials />
       <Gallery />
+      <Testimonials />
     </main>
   );
 }

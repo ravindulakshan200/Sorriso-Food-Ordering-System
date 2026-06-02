@@ -2,28 +2,36 @@
 
 import { motion } from "framer-motion";
 
+const ITEMS = [
+  "🍚 Basmathi Rice",
+  "🌶️ Crispy Bites",
+  "🥢 Wok-Tossed",
+  "🔥 Deviled Dishes",
+  "🍤 Hot Butter Cuttle Fish",
+  "🍗 Chilli Chicken",
+  "🍛 Nasi Gurang",
+  "🥩 Mix Meat Rice",
+  "🦑 Sea Food Special",
+  "🌿 Vege Options",
+];
+
 export default function Marquee() {
-  const words = ["SORRISO FOOD", "TASTE OF THE HEAVEN", "YOUR BELLY KNOWS BEST", "SINCE 2024", "BATTARAMULLA"];
-  const repeatedWords = [...words, ...words, ...words, ...words, ...words];
+  const doubled = [...ITEMS, ...ITEMS];
 
   return (
-    <div className="w-full bg-accent text-background py-4 overflow-hidden flex border-y border-accent-hover relative z-20">
+    <div className="py-5 bg-accent/10 border-y border-accent/20 overflow-hidden relative z-10">
       <motion.div
-        className="flex whitespace-nowrap gap-12"
-        animate={{
-          x: ["0%", "-50%"],
-        }}
-        transition={{
-          ease: "linear",
-          duration: 20,
-          repeat: Infinity,
-        }}
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, duration: 28, ease: "linear" }}
+        className="flex gap-0 whitespace-nowrap"
       >
-        {repeatedWords.map((word, index) => (
-          <div key={index} className="flex items-center gap-12">
-            <span className="font-accent text-sm font-bold tracking-[0.3em] uppercase">{word}</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-background/50 inline-block" />
-          </div>
+        {doubled.map((item, i) => (
+          <span key={i} className="flex items-center gap-0">
+            <span className="font-accent text-[11px] tracking-[0.25em] uppercase text-accent/80 px-6">
+              {item}
+            </span>
+            <span className="text-accent/30 text-xs">·</span>
+          </span>
         ))}
       </motion.div>
     </div>

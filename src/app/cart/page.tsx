@@ -181,16 +181,23 @@ export default function CheckoutPage() {
             
             <div className="flex flex-col gap-6 mb-8 max-h-[40vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
               {items.map((item) => (
-                <div key={item.id} className="flex items-center gap-4">
+                <div key={item.cartItemId} className="flex items-center gap-4">
                   <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0 border border-white/10">
                     <Image src={item.image_url} alt={item.name} fill className="object-cover" />
                   </div>
                   <div className="flex-grow">
                     <div className="flex justify-between items-baseline mb-1">
-                      <h5 className="font-heading text-lg text-white font-medium">{item.name}</h5>
-                      <span className="font-body text-accent">{formatPrice(item.price * item.quantity)}</span>
+                      <h5 className="font-heading text-base text-white font-medium leading-tight">{item.name}</h5>
+                      <span className="font-body text-accent">{formatPrice((item.sizePrice ?? item.price) * item.quantity)}</span>
                     </div>
-                    <span className="text-text-muted text-sm font-body">Qty: {item.quantity}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-text-muted text-sm font-body">Qty: {item.quantity}</span>
+                      {item.selectedSize && (
+                        <span className="text-[9px] font-accent tracking-widest uppercase text-accent bg-accent/10 border border-accent/20 rounded-full px-2 py-0.5">
+                          {item.selectedSize}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
