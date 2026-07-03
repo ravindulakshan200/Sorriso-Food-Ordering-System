@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Cormorant_Garamond, DM_Sans, Montserrat } from "next/font/google";
 import "@/styles/globals.css";
 import { ToastProvider } from "@/contexts/ToastProvider";
@@ -9,6 +8,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import GlobalCursor from "@/components/common/GlobalCursor";
 import CartDrawer from "@/components/layout/CartDrawer";
+import PayHereScript from "@/components/common/PayHereScript";
 
 const cormorant = Cormorant_Garamond({ 
   subsets: ["latin"], 
@@ -74,7 +74,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${montserrat.variable} scroll-smooth`}>
       <body className="bg-background text-text-primary text-base min-h-screen flex flex-col font-body antialiased">
-        <Script src="https://www.payhere.lk/lib/payhere.js" strategy="lazyOnload" />
+        <PayHereScript />
         <GlobalCursor />
         <CartProvider>
           <LanguageProvider>
