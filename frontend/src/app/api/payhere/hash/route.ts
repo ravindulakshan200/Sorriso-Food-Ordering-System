@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { generatePayHereHash } from '@backend/payment/payhere';
+import { generatePayHereHash } from '@/lib/payhere';
 
 export async function POST(req: Request) {
   try {

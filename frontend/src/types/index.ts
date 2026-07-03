@@ -1,1 +1,1 @@
-export * from "@backend/types/types";
+export * from "./types";
