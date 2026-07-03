@@ -45,14 +45,32 @@ This project provides a complete digital restaurant experience with:
 
 ## Project Structure
 
+This project uses a monorepo convention for code organization, while maintaining a single Next.js build.
+
 ```text
-src/
-  app/              # App router pages and API routes
-  components/       # Reusable UI components
-  lib/              # Config, constants, utilities, Supabase helpers
-  types/            # Shared TypeScript types
-supabase/           # Database schema and migration files
+/
+├── frontend/
+│   ├── src/
+│   │   ├── app/              # UI routes and API wrappers
+│   │   ├── components/       # Reusable UI components
+│   │   ├── lib/              # Frontend utilities and configs
+│   │   └── types/            # Re-exports backend types
+│   ├── public/               # Static assets
+│   └── package.json          # Main package file driving the app
+│
+├── backend/
+│   └── src/
+│       ├── auth/             # Authentication logic
+│       ├── models/           # Shared TypeScript types
+│       ├── payment/          # PayHere integration logic
+│       ├── services/         # Database and core services
+│       ├── supabase/         # Supabase client and middleware
+│       └── utils/            # General utilities
+│
+└── supabase/                 # Database schema and migration files
 ```
+
+> **Note**: The `backend/` folder contains pure server-side TypeScript modules that are imported by the `frontend/` Next.js application using the `@backend/` path alias.
 
 ## Prerequisites
 
@@ -73,6 +91,7 @@ Make sure you have the following installed:
 2. Install dependencies
 
    ```bash
+   cd frontend
    npm install
    ```
 
@@ -110,6 +129,7 @@ You can also create an admin account in Supabase Authentication before signing i
 ## Run Locally
 
 ```bash
+cd frontend
 npm run dev
 ```
 
@@ -123,8 +143,9 @@ This project is ready for deployment on Vercel or any compatible Node.js hosting
 
 1. Push the project to GitHub
 2. Import it into Vercel
-3. Add the environment variables from `.env.local`
-4. Deploy the app
+3. Ensure the **Root Directory** is set to `frontend`
+4. Add the environment variables from `.env.local`
+5. Deploy the app
 
 Set `NEXT_PUBLIC_SITE_URL` to your production domain such as `https://sorrisofood.lk`.
 
@@ -135,3 +156,4 @@ Contributions are welcome. If you want to improve the app, open an issue or subm
 ## Contact
 
 For business or project-related inquiries, please reach out through the contact form or the project repository.
+
