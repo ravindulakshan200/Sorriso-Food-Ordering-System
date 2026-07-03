@@ -1,6 +1,12 @@
 {
   "name": "foooood-root",
   "private": true,
+  "scripts": {
+    "dev": "npm --workspace frontend run dev",
+    "build": "npm --workspace frontend run build",
+    "start": "npm --workspace frontend run start",
+    "lint": "npm --workspace frontend run lint"
+  },
   "workspaces": [
     "frontend",
     "backend"

@@ -120,6 +120,12 @@ export default function CheckoutPage() {
         country: 'Sri Lanka'
       };
 
+      if (!window.payhere || typeof window.payhere.startPayment !== 'function') {
+        toast("Payment service is not available yet. Please try again in a moment.", "error");
+        setIsLoading(false);
+        return;
+      }
+
       console.log("=== PayHere Payload Debug ===");
       console.log("Payment Configuration:", payment);
       console.log("=============================");

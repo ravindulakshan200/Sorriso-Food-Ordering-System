@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, persistAdminAuthSession } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -20,15 +20,19 @@ export default function AdminLoginPage() {
     setError(null);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      setError(error.message);
+    if (error || !data.session) {
+      setError(error?.message ?? "Failed to sign in. Please try again.");
       setLoading(false);
-    } else {
-      router.push("/admin/dashboard");
-      router.refresh();
+      return;
     }
+
+    const { access_token, refresh_token } = data.session;
+    persistAdminAuthSession(access_token, refresh_token);
+
+    router.push("/admin/dashboard");
+    router.refresh();
   };
 
   return (

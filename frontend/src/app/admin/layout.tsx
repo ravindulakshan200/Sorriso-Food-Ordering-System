@@ -15,7 +15,7 @@ import {
   X,
   ChefHat,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { clearAdminAuthSession, createClient } from "@/lib/supabase/client";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -34,9 +34,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const handleSignOut = async () => {
     setSigningOut(true);
     const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/admin/login");
-    router.refresh();
+
+    try {
+      await supabase.auth.signOut({ scope: "global" });
+    } catch (error) {
+      console.error("Admin sign out failed", error);
+    } finally {
+      clearAdminAuthSession();
+      router.replace("/admin/login");
+      router.refresh();
+      setSigningOut(false);
+    }
   };
 
   // Don't render the admin shell on the login page
