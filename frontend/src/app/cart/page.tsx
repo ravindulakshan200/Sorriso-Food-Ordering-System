@@ -176,7 +176,7 @@ export default function CheckoutPage() {
       const isPayHereAvailable = await waitForPayHereReady();
 
       if (!isPayHereAvailable || !window.payhere || typeof window.payhere.startPayment !== 'function') {
-        toast("Payment service is not available yet. Please try again in a moment.", "error");
+        toast("PayHere could not be initialized. Please refresh and try again.", "error");
         setIsLoading(false);
         return;
       }

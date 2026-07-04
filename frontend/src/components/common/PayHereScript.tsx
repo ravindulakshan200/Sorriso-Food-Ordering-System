@@ -10,16 +10,24 @@ export default function PayHereScript() {
       window.dispatchEvent(new Event("payhere-script-ready"));
     };
 
-    if (window.payhere && typeof window.payhere.startPayment === "function") {
-      dispatchReady();
-      return;
-    }
+    const dispatchError = () => {
+      window.dispatchEvent(new Event("payhere-script-error"));
+    };
+
+    const tryReady = () => {
+      if (window.payhere && typeof window.payhere.startPayment === "function") {
+        dispatchReady();
+        return true;
+      }
+      return false;
+    };
+
+    if (tryReady()) return;
 
     if (document.getElementById(SCRIPT_ID)) {
       const existing = window.setInterval(() => {
-        if (window.payhere && typeof window.payhere.startPayment === "function") {
+        if (tryReady()) {
           window.clearInterval(existing);
-          dispatchReady();
         }
       }, 100);
 
@@ -32,10 +40,14 @@ export default function PayHereScript() {
       s.src = "https://www.payhere.lk/lib/payhere.js";
       s.async = true;
       s.onload = () => {
-        dispatchReady();
+        window.setTimeout(() => {
+          if (!tryReady()) {
+            dispatchError();
+          }
+        }, 200);
       };
       s.onerror = () => {
-        window.dispatchEvent(new Event("payhere-script-error"));
+        dispatchError();
       };
       document.body.appendChild(s);
     };
