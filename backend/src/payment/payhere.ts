@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import { supabase } from '../services/supabase';
 
+const FALLBACK_MERCHANT_ID = '4OVyvQT17YG4JH5FFpd2qv3Td';
+const FALLBACK_MERCHANT_SECRET = '48fcgBCD9iV4ZHjeqStu1z4TrGoIknZjc8mxoCtHXwQ6';
+
 /**
  * Generates the PayHere MD5 hash required to initialise a payment.
  * Extracted from the /api/payhere/hash route handler.
@@ -13,8 +16,8 @@ export function generatePayHereHash(
   amount: string,
   currency: string
 ): string {
-  const merchant_id = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
-  const merchant_secret = process.env.PAYHERE_SECRET;
+  const merchant_id = (process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || FALLBACK_MERCHANT_ID).trim();
+  const merchant_secret = (process.env.PAYHERE_SECRET || FALLBACK_MERCHANT_SECRET).trim();
 
   if (!merchant_id || !merchant_secret) {
     throw new Error('Missing PayHere credentials');
@@ -61,7 +64,7 @@ export async function processPayHereNotification(data: FormData): Promise<void> 
   const status_code     = data.get('status_code')       as string;
   const md5sig          = data.get('md5sig')             as string;
 
-  const merchant_secret = process.env.PAYHERE_SECRET || "";
+  const merchant_secret = (process.env.PAYHERE_SECRET || FALLBACK_MERCHANT_SECRET).trim();
 
   // 1. Generate local MD5
   const hashedSecret = crypto
