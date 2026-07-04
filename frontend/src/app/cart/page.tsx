@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/contexts/CartProvider";
 import { formatPrice } from "@/lib/utils";
 import Input from "@/components/common/Input";
@@ -41,6 +41,50 @@ export default function CheckoutPage() {
 
   const deliveryFee = orderType === "delivery" ? 250 : 0;
   const finalTotal = cartTotal + deliveryFee;
+
+  useEffect(() => {
+    const handleReady = () => undefined;
+    const handleError = () => undefined;
+
+    window.addEventListener("payhere-script-ready", handleReady);
+    window.addEventListener("payhere-script-error", handleError);
+
+    return () => {
+      window.removeEventListener("payhere-script-ready", handleReady);
+      window.removeEventListener("payhere-script-error", handleError);
+    };
+  }, []);
+
+  const waitForPayHereReady = async () => {
+    if (window.payhere && typeof window.payhere.startPayment === "function") {
+      return true;
+    }
+
+    const startedAt = Date.now();
+
+    return await new Promise<boolean>((resolve) => {
+      const finish = (ready: boolean) => {
+        if (timer) window.clearTimeout(timer);
+        window.removeEventListener("payhere-script-ready", onReady);
+        window.removeEventListener("payhere-script-error", onError);
+        resolve(ready);
+      };
+
+      const onReady = () => finish(true);
+      const onError = () => finish(false);
+
+      window.addEventListener("payhere-script-ready", onReady, { once: true });
+      window.addEventListener("payhere-script-error", onError, { once: true });
+
+      const timer = window.setTimeout(() => {
+        finish(false);
+      }, 10000);
+
+      if (Date.now() - startedAt > 10000) {
+        finish(false);
+      }
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,7 +168,9 @@ export default function CheckoutPage() {
         country: 'Sri Lanka'
       };
 
-      if (!window.payhere || typeof window.payhere.startPayment !== 'function') {
+      const isPayHereAvailable = await waitForPayHereReady();
+
+      if (!isPayHereAvailable || !window.payhere || typeof window.payhere.startPayment !== 'function') {
         toast("Payment service is not available yet. Please try again in a moment.", "error");
         setIsLoading(false);
         return;

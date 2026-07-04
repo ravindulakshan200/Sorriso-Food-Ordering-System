@@ -6,7 +6,25 @@ export default function PayHereScript() {
   useEffect(() => {
     const SCRIPT_ID = "payhere-sdk-script";
 
-    if (document.getElementById(SCRIPT_ID)) return;
+    const dispatchReady = () => {
+      window.dispatchEvent(new Event("payhere-script-ready"));
+    };
+
+    if (window.payhere && typeof window.payhere.startPayment === "function") {
+      dispatchReady();
+      return;
+    }
+
+    if (document.getElementById(SCRIPT_ID)) {
+      const existing = window.setInterval(() => {
+        if (window.payhere && typeof window.payhere.startPayment === "function") {
+          window.clearInterval(existing);
+          dispatchReady();
+        }
+      }, 100);
+
+      return () => window.clearInterval(existing);
+    }
 
     const loadScript = () => {
       const s = document.createElement("script");
@@ -14,7 +32,10 @@ export default function PayHereScript() {
       s.src = "https://www.payhere.lk/lib/payhere.js";
       s.async = true;
       s.onload = () => {
-        window.dispatchEvent(new Event("payhere-script-ready"));
+        dispatchReady();
+      };
+      s.onerror = () => {
+        window.dispatchEvent(new Event("payhere-script-error"));
       };
       document.body.appendChild(s);
     };
