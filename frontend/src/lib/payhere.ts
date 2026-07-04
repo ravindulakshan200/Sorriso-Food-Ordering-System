@@ -5,7 +5,7 @@ function getPayHereCredentials() {
   const merchant_id = (
     process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID ||
     process.env.PAYHERE_MERCHANT_ID ||
-    ""
+    "1222956"
   ).trim();
   const merchant_secret = (
     process.env.PAYHERE_SECRET ||
