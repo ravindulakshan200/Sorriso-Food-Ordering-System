@@ -1,16 +1,30 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { createClient } from "@/lib/supabase/client";
+
+function getPayHereCredentials() {
+  const merchant_id = (process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || "").trim();
+  const merchant_secret = (process.env.PAYHERE_SECRET || "").trim();
+
+  if (!merchant_id || !merchant_secret) {
+    throw new Error("PayHere credentials are not configured.");
+  }
+
+  return { merchant_id, merchant_secret };
+}
 
 export function generatePayHereHash(
   order_id: string,
   amount: string,
   currency: string
 ): string {
-  const merchant_id = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID;
-  const merchant_secret = process.env.PAYHERE_SECRET;
+  const { merchant_id, merchant_secret } = getPayHereCredentials();
 
-  if (!merchant_id || !merchant_secret) {
-    throw new Error("PayHere credentials are not configured.");
+  const normalizedOrderId = String(order_id || "").trim();
+  const normalizedCurrency = String(currency || "").trim().toUpperCase();
+  const numericAmount = Number(amount);
+
+  if (!normalizedOrderId || !normalizedCurrency || !Number.isFinite(numericAmount) || numericAmount < 0) {
+    throw new Error("Invalid PayHere request data.");
   }
 
   const hashedSecret = crypto
@@ -19,13 +33,8 @@ export function generatePayHereHash(
     .digest("hex")
     .toUpperCase();
 
-  const amountFormatted = parseFloat(amount).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    useGrouping: false,
-  });
-
-  const hashString = merchant_id + order_id + amountFormatted + currency + hashedSecret;
+  const amountFormatted = numericAmount.toFixed(2);
+  const hashString = merchant_id + normalizedOrderId + amountFormatted + normalizedCurrency + hashedSecret;
   const hash = crypto.createHash("md5").update(hashString).digest("hex").toUpperCase();
 
   return hash;
