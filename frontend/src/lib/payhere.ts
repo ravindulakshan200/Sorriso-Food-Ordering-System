@@ -6,7 +6,7 @@ export function generatePayHereHash(
   amount: string,
   currency: string
 ): string {
-  const merchant_id = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID;
+  const merchant_id = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID;
   const merchant_secret = process.env.PAYHERE_SECRET;
 
   if (!merchant_id || !merchant_secret) {
