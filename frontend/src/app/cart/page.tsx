@@ -104,15 +104,15 @@ export default function CheckoutPage() {
       const isSandbox = process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true';
       const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || '1222956';
       
-      const payment: Record<string, string | number | boolean> = {
+      const payment = {
         sandbox: isSandbox,
         merchant_id: merchantId,
         return_url: window.location.origin + '/checkout/success?order=' + orderId,
         cancel_url: window.location.origin + '/cart',
         notify_url: window.location.origin + '/api/payhere/notify',
-        order_id: orderId,
+        order_id: String(orderId),
         items: 'Sorriso Food Order',
-        amount: finalTotal.toFixed(2), // SDK prefers 2 decimal places formatted
+        amount: finalTotal.toFixed(2),
         currency: 'LKR',
         hash: hashData.hash,
         first_name: formData.firstName,
