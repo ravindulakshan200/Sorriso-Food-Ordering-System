@@ -88,10 +88,14 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId, amount: finalTotal, currency: 'LKR' })
       });
-      const hashData = await hashRes.json();
+      const hashData = await hashRes.json().catch(() => ({}) as { hash?: string; error?: string });
 
-      if (!hashData.hash) {
-        toast("Payment gateway configuration error.", "error");
+      if (!hashRes.ok || !hashData.hash) {
+        const message = typeof hashData.error === 'string' && hashData.error.trim()
+          ? hashData.error
+          : 'Payment gateway is temporarily unavailable. Please try again.';
+
+        toast(message, "error");
         setIsLoading(false);
         return;
       }

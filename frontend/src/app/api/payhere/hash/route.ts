@@ -15,7 +15,11 @@ export async function POST(req: Request) {
       currency?: unknown;
     };
 
-    if (typeof order_id !== "string" || typeof amount !== "string" && typeof amount !== "number" || typeof currency !== "string") {
+    const hasValidOrderId = typeof order_id === "string" || typeof order_id === "number";
+    const hasValidAmount = typeof amount === "string" || typeof amount === "number";
+    const hasValidCurrency = typeof currency === "string" && currency.trim().length > 0;
+
+    if (!hasValidOrderId || !hasValidAmount || !hasValidCurrency) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
