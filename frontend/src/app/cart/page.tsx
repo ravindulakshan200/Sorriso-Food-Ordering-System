@@ -13,8 +13,8 @@ import { useToast } from "@/contexts/ToastProvider";
 
 declare global {
   interface Window {
-    payhere: {
-      startPayment: (payment: unknown) => void;
+    payhere?: {
+      startPayment?: (payment: unknown) => void;
       onCompleted?: (orderId: string) => void;
       onDismissed?: () => void;
       onError?: (error: string) => void;
@@ -23,7 +23,7 @@ declare global {
 }
 
 export default function CheckoutPage() {
-  const { items, cartTotal, clearCart } = useCart();
+  const { items, cartTotal } = useCart();
   const [orderType, setOrderType] = useState<"delivery" | "pickup">("delivery");
   const router = useRouter();
   const { toast } = useToast();
@@ -55,45 +55,7 @@ export default function CheckoutPage() {
     };
   }, []);
 
-  const waitForPayHereReady = async () => {
-    if (window.payhere && typeof window.payhere.startPayment === "function") {
-      return true;
-    }
-
-    const startedAt = Date.now();
-
-    return await new Promise<boolean>((resolve) => {
-      const finish = (ready: boolean) => {
-        if (timer) window.clearTimeout(timer);
-        window.removeEventListener("payhere-script-ready", onReady);
-        window.removeEventListener("payhere-script-error", onError);
-        resolve(ready);
-      };
-
-      const onReady = () => finish(true);
-      const onError = () => finish(false);
-
-      window.addEventListener("payhere-script-ready", onReady, { once: true });
-      window.addEventListener("payhere-script-error", onError, { once: true });
-
-      const timer = window.setTimeout(() => {
-        finish(false);
-      }, 10000);
-
-      if (Date.now() - startedAt > 10000) {
-        finish(false);
-      }
-    });
-  };
-
   const submitPayHerePayment = (payment: Record<string, string | boolean>, isSandbox: boolean) => {
-    const isLocalDev = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
-
-    if (!isLocalDev && window.payhere && typeof window.payhere.startPayment === "function") {
-      window.payhere.startPayment(payment as never);
-      return;
-    }
-
     const form = document.createElement("form");
     form.method = "POST";
     form.action = isSandbox ? "https://sandbox.payhere.lk/pay/checkout" : "https://www.payhere.lk/pay/checkout";
@@ -199,42 +161,9 @@ export default function CheckoutPage() {
         country: 'Sri Lanka'
       };
 
-      const isPayHereAvailable = await waitForPayHereReady();
-
-      if (!isPayHereAvailable || !window.payhere || typeof window.payhere.startPayment !== 'function') {
-        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-          toast("Redirecting you to PayHere checkout…", "success");
-          submitPayHerePayment(payment, isSandbox);
-          setIsLoading(false);
-          return;
-        }
-
-        toast("PayHere could not be initialized. Please refresh and try again.", "error");
-        setIsLoading(false);
-        return;
-      }
-
-      // 3. Define Callback Interceptors
-      window.payhere.onCompleted = async function onCompleted() {
-        await supabase.from('orders').update({ payment_status: 'paid' }).eq('id', orderId);
-        toast("Order placed successfully!", "success");
-        clearCart();
-        router.push(`/checkout/success?order=${orderId}`);
-        setIsLoading(false);
-      };
-
-      window.payhere.onDismissed = function onDismissed() {
-        toast("Payment Cancelled", "error");
-        setIsLoading(false);
-      };
-
-      window.payhere.onError = function onError(error: string) {
-        toast("Payment Error: " + error, "error");
-        setIsLoading(false);
-      };
-
-      // 4. Trigger Widget
-      window.payhere.startPayment(payment);
+      toast("Redirecting you to PayHere checkout…", "success");
+      submitPayHerePayment(payment, isSandbox);
+      setIsLoading(false);
 
     } catch {
       toast("An unexpected error occurred.", "error");
