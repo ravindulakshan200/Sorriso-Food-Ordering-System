@@ -146,13 +146,11 @@ export default function CheckoutPage() {
 
       // 2. Configure PayHere Object
       const isSandbox = process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true';
-      const merchantId = (process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || '').trim();
-
-      if (!merchantId) {
-        toast("Payment gateway is not configured correctly. Please contact support.", "error");
-        setIsLoading(false);
-        return;
-      }
+      const merchantId = (
+        process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID ||
+        process.env.PAYHERE_MERCHANT_ID ||
+        '4OVyvQT17YG4JH5FFpd2qv3Td'
+      ).trim();
 
       const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || window.location.origin || '').replace(/\/$/, '');
       const payment = {
