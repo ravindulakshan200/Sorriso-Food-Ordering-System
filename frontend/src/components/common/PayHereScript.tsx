@@ -13,6 +13,9 @@ export default function PayHereScript() {
       s.id = SCRIPT_ID;
       s.src = "https://www.payhere.lk/lib/payhere.js";
       s.async = true;
+      s.onload = () => {
+        window.dispatchEvent(new Event("payhere-script-ready"));
+      };
       document.body.appendChild(s);
     };
 
@@ -23,7 +26,6 @@ export default function PayHereScript() {
     }
 
     return () => {
-      // no teardown required; leave script if loaded. If not loaded, ensure listener is removed.
       window.removeEventListener("load", loadScript as EventListener);
     };
   }, []);

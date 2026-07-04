@@ -130,10 +130,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      console.log("=== PayHere Payload Debug ===");
-      console.log("Payment Configuration:", payment);
-      console.log("=============================");
-
       // 3. Define Callback Interceptors
       window.payhere.onCompleted = async function onCompleted() {
         await supabase.from('orders').update({ payment_status: 'paid' }).eq('id', orderId);
