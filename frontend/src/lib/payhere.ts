@@ -5,7 +5,7 @@ function getPayHereCredentials() {
   const merchant_id = (
     process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID ||
     process.env.PAYHERE_MERCHANT_ID ||
-    "1222956"
+    ""
   ).trim();
   const merchant_secret = (
     process.env.PAYHERE_SECRET ||
@@ -13,8 +13,8 @@ function getPayHereCredentials() {
     ""
   ).trim();
 
-  if (!merchant_secret) {
-    return { merchant_id, merchant_secret: "MzU4MzYwMTQ1Njk5NjMzOTE4MTcwODcyODkzODE3ODg5MTY4ODc=" };
+  if (!merchant_id || !merchant_secret) {
+    throw new Error("PayHere credentials are not configured.");
   }
 
   return { merchant_id, merchant_secret };

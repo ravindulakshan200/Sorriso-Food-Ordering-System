@@ -146,14 +146,21 @@ export default function CheckoutPage() {
 
       // 2. Configure PayHere Object
       const isSandbox = process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true';
-      const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || '1222956';
-      
+      const merchantId = (process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || '').trim();
+
+      if (!merchantId) {
+        toast("Payment gateway is not configured correctly. Please contact support.", "error");
+        setIsLoading(false);
+        return;
+      }
+
+      const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || window.location.origin || '').replace(/\/$/, '');
       const payment = {
         sandbox: isSandbox,
         merchant_id: merchantId,
-        return_url: window.location.origin + '/checkout/success?order=' + orderId,
-        cancel_url: window.location.origin + '/cart',
-        notify_url: window.location.origin + '/api/payhere/notify',
+        return_url: `${baseUrl}/checkout/success?order=${orderId}`,
+        cancel_url: `${baseUrl}/cart`,
+        notify_url: `${baseUrl}/api/payhere/notify`,
         order_id: String(orderId),
         items: 'Sorriso Food Order',
         amount: finalTotal.toFixed(2),
