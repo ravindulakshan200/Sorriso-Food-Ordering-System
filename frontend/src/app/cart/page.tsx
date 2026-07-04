@@ -86,6 +86,32 @@ export default function CheckoutPage() {
     });
   };
 
+  const submitPayHerePayment = (payment: Record<string, string | boolean>, isSandbox: boolean) => {
+    const isLocalDev = ["localhost", "127.0.0.1", "0.0.0.0"].includes(window.location.hostname);
+
+    if (!isLocalDev && window.payhere && typeof window.payhere.startPayment === "function") {
+      window.payhere.startPayment(payment as never);
+      return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = isSandbox ? "https://sandbox.payhere.lk/pay/checkout" : "https://www.payhere.lk/pay/checkout";
+    form.target = "_self";
+
+    Object.entries(payment).forEach(([key, value]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = key;
+      input.value = String(value);
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -176,6 +202,13 @@ export default function CheckoutPage() {
       const isPayHereAvailable = await waitForPayHereReady();
 
       if (!isPayHereAvailable || !window.payhere || typeof window.payhere.startPayment !== 'function') {
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+          toast("Redirecting you to PayHere checkout…", "success");
+          submitPayHerePayment(payment, isSandbox);
+          setIsLoading(false);
+          return;
+        }
+
         toast("PayHere could not be initialized. Please refresh and try again.", "error");
         setIsLoading(false);
         return;
