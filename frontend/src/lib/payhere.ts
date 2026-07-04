@@ -2,8 +2,16 @@ import crypto from "node:crypto";
 import { createClient } from "@/lib/supabase/client";
 
 function getPayHereCredentials() {
-  const merchant_id = (process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || "").trim();
-  const merchant_secret = (process.env.PAYHERE_SECRET || "").trim();
+  const merchant_id = (
+    process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID ||
+    process.env.PAYHERE_MERCHANT_ID ||
+    ""
+  ).trim();
+  const merchant_secret = (
+    process.env.PAYHERE_SECRET ||
+    process.env.NEXT_PUBLIC_PAYHERE_SECRET ||
+    ""
+  ).trim();
 
   if (!merchant_id || !merchant_secret) {
     throw new Error("PayHere credentials are not configured.");

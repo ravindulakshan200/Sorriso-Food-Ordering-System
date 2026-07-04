@@ -98,7 +98,7 @@ export default function CheckoutPage() {
 
       // 2. Configure PayHere Object
       const isSandbox = process.env.NEXT_PUBLIC_PAYHERE_SANDBOX === 'true';
-      const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || '1222956';
+      const merchantId = process.env.NEXT_PUBLIC_PAYHERE_MERCHANT_ID || process.env.PAYHERE_MERCHANT_ID || '1222956';
       
       const payment: Record<string, string | number | boolean> = {
         sandbox: isSandbox,
