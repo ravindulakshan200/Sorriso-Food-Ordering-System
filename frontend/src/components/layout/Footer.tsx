@@ -40,21 +40,37 @@ export default function Footer() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail) return;
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(normalizedEmail)) {
+      toast(t.footer.subscribeFail, "error");
+      return;
+    }
 
     setSubmitting(true);
-    const { error } = await supabase
-      .from("newsletter_subscribers")
-      .insert([{ email: email.trim().toLowerCase() }]);
+    try {
+      const { error } = await supabase
+        .from("newsletter_subscribers")
+        .insert([{ email: normalizedEmail }]);
 
-    if (error) {
-      if (error.code === "23505") toast(t.footer.alreadySubscribed, "success");
-      else toast(t.footer.subscribeFail, "error");
-    } else {
-      toast(t.footer.subscribed, "success");
-      setEmail("");
+      if (error) {
+        if (error.code === "23505") {
+          toast(t.footer.alreadySubscribed, "success");
+        } else {
+          toast(t.footer.subscribeFail, "error");
+        }
+      } else {
+        toast(t.footer.subscribed, "success");
+        setEmail("");
+      }
+    } catch {
+      toast(t.footer.subscribeFail, "error");
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   return (
